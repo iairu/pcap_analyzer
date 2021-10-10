@@ -45,6 +45,13 @@ Then VSCode setup of Python local environment that will guarantee auto-activatio
 Package installation recommended AFTER virtual env. setup and activated (*check using `where pip`*), as not to saturate your global packages.
 
 ```
-pip install scapy
+pip install scapy[complete]
 ```
 
+Not all of the aforementioned packages are used in their entirety, but they're available just in case.
+
+### Package version check
+
+In case of incompatibilities, detailed information about package versions in `PACKAGES.md` generated using `pip list > PACKAGES.md`. 
+
+Most of these packages are installed as dependencies automatically.
