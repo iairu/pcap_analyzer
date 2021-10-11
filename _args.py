@@ -5,6 +5,7 @@ First thing that the CLI should work with really...
 
 """
 from _close import *
+import os
 import argparse
 
 class Args:
@@ -12,19 +13,19 @@ class Args:
     def __init__(self):
         # Argument definition
         argparser = argparse.ArgumentParser(description="PCAP Network Analyzer (PKS) - Ondrej Spanik 2021 - github.com/iairu")
-        argparser.add_argument("path", type=open, help="Path to a *.pcap file, from which to read network packets")
-        argparser.add_argument("-c", type=int, help="Number of packets to read (default:0 = all)")
+        argparser.add_argument("path",type=str, help="Path to a *.pcap file, from which to read network packets")
+        argparser.add_argument("-count", "-c", type=int, help="Number of packets to read (default:-1 = all)")
 
-        # Parsing + Exception conversion to human readable
-        try:
-            arguments = argparser.parse_args()
-        except FileNotFoundError:
-            close(Code.INCORRECT_ARG_PATH)
+        # Parsing
+        arguments = argparser.parse_args()
 
-        # Checking user input
-        count = 0 if (arguments.c == None) else arguments.c # note: python has a weird way of doing ternary
-        if (count < 0): close(Code.INCORRECT_ARG_COUNT)
+        # Checking user input (note: python has a weird way of doing ternary)
+        _path = str(arguments.path if os.path.isfile(arguments.path) else close(Code.INCORRECT_ARG_PATH))
+        if not _path.endswith(".pcap"): close(Code.INCORRECT_ARG_PATH)
+
+        _count = int(-1 if (arguments.count == None) else arguments.count) # -1 means all for compatibility with scapy
+        if (_count < -1): close(Code.INCORRECT_ARG_COUNT)
 
         # Returning all parsed arguments
-        self.path = arguments.path # todo not really path but opened file curently, depending on scapy support this may have to be changed
-        self.count = count
+        self.path = _path
+        self.count = _count
