@@ -16,6 +16,8 @@ class Code:
     INCORRECT_ARG_PATH = 10
     INCORRECT_ARG_COUNT = 20
     INCORRECT_ARG_COUNT_ZERO = 21
+    INCORRECT_ARG_FIRST = 30
+    INCORRECT_ARG_FIRST_TOO_HIGH = 31
 
 def close(_code=Code.SUCCESS):
     """Closes with given code, printing out related message."""
@@ -27,7 +29,9 @@ def close(_code=Code.SUCCESS):
         # Code.FAILURE: "Failure.",
         Code.INCORRECT_ARG_PATH: "Incorrect 'path' argument - Wrong filetype or file doesn't exist.",
         Code.INCORRECT_ARG_COUNT: "Incorrect 'count' argument - Has to be -1 or more.",
-        Code.INCORRECT_ARG_COUNT_ZERO: "'count' is 0.",
+        Code.INCORRECT_ARG_COUNT_ZERO: "At least one right behind me, but none here... 'count' is 0 or 'first' needs to be lower.",
+        Code.INCORRECT_ARG_FIRST: "Incorrect 'first' argument - Has to be 1 or more.",
+        Code.INCORRECT_ARG_FIRST_TOO_HIGH: "Argument 'first' too high - Verify number of packets first.",
     }
     print("Wasted: " + switch.get(_code, "Closed unexpectedly."))
     print("Use -h for help.")
