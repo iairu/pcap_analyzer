@@ -1,5 +1,6 @@
 from _close import *
 from _args import *
+from _analyze import *
 import _byte as byte
 import scapy.all as scapy
 
@@ -15,8 +16,13 @@ def main():
         pkt = bytes(packets[i + offset])
         print("_______")
         print("Frame #" + str(i + offset + 1) + ":")
+
+        # Hexdump by default
         if not (args.no_hexdump): byte.printHexDump(pkt)
-        # print(pkt) # todo this will go into Analyzer(raw_frame) after i figure out what some symbols in the bytes print sequence mean
+        
+        # Analysis
+        anal = Analyze(pkt)
+        anal.output()
 
     close(Code.SUCCESS)
 
