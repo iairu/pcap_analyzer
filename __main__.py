@@ -8,6 +8,7 @@ def main():
     packets = scapy.rdpcap(args.path, args.count)
 
     count = len(packets) # packets[0] is first if count > 0, packets[count-1] is last
+    if (count == 0): close(Code.INCORRECT_ARG_COUNT_ZERO)
     for i in range(count):
         print("_______")
         print("Frame #" + str(i + 1) + ":")
