@@ -2,7 +2,7 @@
 Utilities for conversion of bytes into hex and dumping bytes as a hexdump.
 """
 
-def getDelimitedString(_bytes: bytes, delimiter: str = ":") -> str:
+def delim(_bytes: bytes, delimiter: str = ":") -> str:
     delimited = str()
     undelimited = _bytes.hex()
     last = len(undelimited) - 1
@@ -46,7 +46,7 @@ def printHexDump(_bytes: bytes):
             # Offset column (hex row counter) ([2:] removes the "0x" hex prefix)
             zeroPrefix(str(hex(_from))[2:], offset) + ": " + 
             # Substring of spaced bytes
-            getDelimitedString( _bytes[ _from : _to ], " ")
+            delim( _bytes[ _from : _to ], " ")
             )
         _from += _each
         _to += _each

@@ -26,7 +26,7 @@ class Args:
         if not _path.endswith(".pcap"): close(Code.INCORRECT_ARG_PATH)
 
         _first = int(1 if (arguments.first == None) else arguments.first)
-        if (_first < 1): close(Code.INCORRECT_ARG_FROM)
+        if (_first < 1): close(Code.INCORRECT_ARG_FIRST)
 
         _count = int(-1 if (arguments.count == None) else arguments.count) # -1 means all for compatibility with scapy
         if (_count < -1): close(Code.INCORRECT_ARG_COUNT)
