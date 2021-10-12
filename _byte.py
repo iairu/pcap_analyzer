@@ -1,6 +1,14 @@
 """
-Utilities for conversion of bytes into hex and dumping bytes as a hexdump.
+Utilities for conversion of bytes into int, hex and dumping bytes as a hexdump.
 """
+
+def btoi(_bytes: bytes) -> int:
+    """Bytes to Int conversion"""
+    out = 0
+    for b in _bytes:
+        out *= 256
+        out += int(b)
+    return out
 
 def delim(_bytes: bytes, delimiter: str = ":") -> str:
     delimited = str()
