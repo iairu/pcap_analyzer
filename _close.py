@@ -19,6 +19,7 @@ class Code:
     INCORRECT_ARG_COUNT_ZERO = 21
     INCORRECT_ARG_FIRST = 30
     INCORRECT_ARG_FIRST_TOO_HIGH = 31
+    PROTOCOL_DEFINITION_WRONG = 50
 
 def close(_code=Code.SUCCESS):
     """Closes with given code, printing out related message."""
@@ -33,6 +34,7 @@ def close(_code=Code.SUCCESS):
         Code.INCORRECT_ARG_COUNT_ZERO: "At least one right behind me, but none here... 'count' is 0 or 'first' needs to be lower.",
         Code.INCORRECT_ARG_FIRST: "Incorrect 'first' argument - Has to be 1 or more.",
         Code.INCORRECT_ARG_FIRST_TOO_HIGH: "Argument 'first' too high - Verify number of packets first.",
+        Code.PROTOCOL_DEFINITION_WRONG: "Incorrect protocol definition in one of /protocols text files. Make sure to use 0xNN hex format.",
     }
     print("Wasted: " + switch.get(_code, "Closed unexpectedly."))
     print("Use -h for help.")
