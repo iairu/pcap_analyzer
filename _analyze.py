@@ -18,13 +18,14 @@ class Analyze:
     # ------------------------------------------
 
     def str_sap(self, code: int) -> str:
-        return self.protocols.str_sap(code)
+        return self._protocols.str_sap(code)
 
     def str_eth_type(self, code: int): 
-        return self.protocols.str_eth_type(code)
+        return self._protocols.str_eth_type(code)
 
     def __init__(self, _bytes: bytes, protocols: Protocols):
-        self.protocols = protocols
+        self._protocols = protocols
+        
         self.eth_std = self.Eth_stds.UNKNOWN
         self.has_eth_type: bool = False
         self.len: int = len(_bytes)

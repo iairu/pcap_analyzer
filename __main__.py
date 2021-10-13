@@ -29,7 +29,7 @@ def main():
 
         # IPv4 Analysis
         if (anal.has_eth_type and byte.btoi(anal.eth_type) == 0x800):
-            anal_ip = AnalyzeIP(anal.data)
+            anal_ip = AnalyzeIP(anal.data, protocols)
             anal_ip.output()
 
     close(Code.SUCCESS)
