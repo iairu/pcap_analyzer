@@ -19,7 +19,7 @@ def __protocolFileToDict__(filepath: str) -> dict:
                 for c in row:
                     # Parsing a single character
                     if (c == "\r" or c == "\n"): continue
-                    if (c == " "):
+                    if (not was_space and c == " "):
                         was_space = True
                     elif (was_space):
                         name += c
