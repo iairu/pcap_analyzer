@@ -18,6 +18,7 @@ def __protocolFileToDict__(filepath: str) -> dict:
             if (rlen > 0 and row[0] != "#"):
                 for c in row:
                     # Parsing a single character
+                    if (c == "\r" or c == "\n"): continue
                     if (c == " "):
                         was_space = True
                     elif (was_space):
@@ -28,7 +29,10 @@ def __protocolFileToDict__(filepath: str) -> dict:
                 if (code[0] != "0" and code[1] != "x"):
                     close(Code.PROTOCOL_DEFINITION_WRONG)
                 else:
-                    _code = int(code, 16)
+                    try:
+                        _code = int(code, 16)
+                    except ValueError:
+                        close(Code.PROTOCOL_DEFINITION_WRONG)
                 # Add to dict
                 out_dict[_code] = name
     return out_dict
@@ -47,7 +51,7 @@ class Protocols:
 
     def __init__(self):
         try:
-            self.ethtype = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.ETHTYPE)
+            self.eth_type = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.ETHTYPE)
             self.sap = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.SAP)
             self.ip = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.IP)
             self.tcp = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.TCP)
@@ -55,3 +59,18 @@ class Protocols:
         except FileNotFoundError:
             close(Code.PROTOCOL_FILE_NOT_FOUND)
         return
+
+    def str_eth_type(self, code: int) -> str:
+        return self.eth_type.get(code,"Unknown ETH TYPE")
+    
+    def str_sap(self, code: int) -> str:
+        return self.sap.get(code, "Unknown SAP")
+
+    def str_ip(self, code: int) -> str:
+        return self.ip.get(code, "Unknown IP Protocol")
+
+    def str_tcp(self, code: int) -> str:
+        return self.tcp.get(code, "Unknown TCP Port")
+
+    def str_udp(self, code: int) -> str:
+        return self.udp.get(code, "Unknown UDP Port")
