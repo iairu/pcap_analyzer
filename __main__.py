@@ -1,11 +1,13 @@
 from _close import *
-from _args import *
-from _analyze import *
-from _analyze_ip import *
+from _args import Args
+from _analyze import Analyze
+from _analyze_ip import AnalyzeIP
+from _reader import Protocols
 import _byte as byte
 import scapy.all as scapy
 
 def main():
+    protocols = Protocols()
     args = Args()
     offset = args.first - 1
     packets = scapy.rdpcap(args.path, args.count + offset)
