@@ -1,6 +1,7 @@
 from _close import *
 from _args import *
 from _analyze import *
+from _analyze_ip import *
 import _byte as byte
 import scapy.all as scapy
 
@@ -23,6 +24,11 @@ def main():
         # Analysis
         anal = Analyze(pkt)
         anal.output()
+
+        # IPv4 Analysis
+        if (anal.has_eth_type and byte.btoi(anal.eth_type) == 0x800):
+            anal_ip = AnalyzeIP(anal.data)
+            anal_ip.output()
 
     close(Code.SUCCESS)
 
