@@ -2,6 +2,7 @@
 The actual analysis of an individual packet using bytes until output.
 """
 from _byte import delim, btoi
+from _reader import Protocols
 
 
 class Analyze:
@@ -57,10 +58,11 @@ class Analyze:
     def str_sap(self, code: int) -> str:
         return self.__Dict__.saps.get(code, "Unknown SAP")
 
-    def str_eth_type(self, code: int) -> str:
-        return self.__Dict__.eth_types.get(code,"Unknown ETH TYPE")
+    def str_eth_type(self, code: int): 
+        return self.protocols.str_eth_type(code)
 
-    def __init__(self, _bytes: bytes):
+    def __init__(self, _bytes: bytes, protocols: Protocols):
+        self.protocols = protocols
         self.eth_std = self.Eth_stds.UNKNOWN
         self.has_eth_type: bool = False
         self.len: int = len(_bytes)

@@ -24,7 +24,7 @@ def main():
         if not (args.no_hexdump): byte.printHexDump(pkt)
         
         # Analysis
-        anal = Analyze(pkt)
+        anal = Analyze(pkt, protocols)
         anal.output()
 
         # IPv4 Analysis
