@@ -10,8 +10,8 @@ class Analyze:
         """ Supported Ethernet Standards """
         UNKNOWN = "Unknown"
         IEEE_802_3_RAW = "IEEE 802.3 RAW"           # todo: check 802.2 802.3 if correct minor ver.
-        IEEE_802_2_LLCSNAP = "IEEE 802.2 LLC+SNAP"  # todo: check 802.2 802.3 if correct minor ver.
-        IEEE_802_2_LLC = "IEEE 802.2 LLC"
+        IEEE_802_3_LLCSNAP = "IEEE 802.3 LLC+SNAP"  # todo: check 802.2 802.3 if correct minor ver.
+        IEEE_802_3_LLC = "IEEE 802.3 LLC"
         ETHERNET2 = "Ethernet II"
 
     class __Dict__:
@@ -85,9 +85,9 @@ class Analyze:
             if (dsap_or_raw == "ffff"):
                 self.eth_std = self.Eth_stds.IEEE_802_3_RAW
             elif (dsap_or_raw == "aaaa"):
-                self.eth_std = self.Eth_stds.IEEE_802_2_LLCSNAP
+                self.eth_std = self.Eth_stds.IEEE_802_3_LLCSNAP
             else:
-                self.eth_std = self.Eth_stds.IEEE_802_2_LLC
+                self.eth_std = self.Eth_stds.IEEE_802_3_LLC
 
         elif (len_or_type >= 1536):
             self.eth_std = self.Eth_stds.ETHERNET2
@@ -102,16 +102,16 @@ class Analyze:
         # LOGICAL LINK HEADER +
         # if (self.eth_std == self.Eth_stds.IEEE_802_3_RAW):
         #     self.is_ipx = True if (_bytes[14:16].hex() == "ffff") else False # ffff checksum 14-15 bajt (2B)    # <--- obvious if RAW
-        if (self.eth_std == self.Eth_stds.IEEE_802_2_LLC or self.eth_std == self.Eth_stds.IEEE_802_2_LLCSNAP):
+        if (self.eth_std == self.Eth_stds.IEEE_802_3_LLC or self.eth_std == self.Eth_stds.IEEE_802_3_LLCSNAP):
             self.dsap = _bytes[14:15] # (1B)
             self.ssap = _bytes[15:16] # (1B)
             self.control = _bytes[16:17] # (1B)
             # SNAP HEADER
-            if (self.eth_std == self.Eth_stds.IEEE_802_2_LLCSNAP):
+            if (self.eth_std == self.Eth_stds.IEEE_802_3_LLCSNAP):
                 self.vendor_code = _bytes[17:20] # 17-19 bajt (3B)
                 self.eth_type = _bytes[20:22] # 20-21 bajt (2B)
                 self.data = _bytes[22:] # 22 bajt po koniec
-            else: # self.eth_std == self.Eth_stds.IEEE_802_2_LLC
+            else: # self.eth_std == self.Eth_stds.IEEE_802_3_LLC
                 self.data = _bytes[17:] # 17 bajt po koniec
         return
 
@@ -141,7 +141,7 @@ class Analyze:
                 print(f"\_ SSAP:              0x{self.ssap.hex()} [{self.str_sap(btoi(self.ssap))}]")
                 print(f"\_ Control:           0x{self.control.hex()} [{btoi(self.control)}]")
 
-            if (self.eth_std == self.Eth_stds.IEEE_802_2_LLCSNAP):
+            if (self.eth_std == self.Eth_stds.IEEE_802_3_LLCSNAP):
                 print(f"SNAP Header:")
                 print(f"\_ Vendor, EthType:   {delim(self.vendor_code)}, 0x{self.eth_type.hex()} [{self.str_eth_type(btoi(self.eth_type))}]")
         
