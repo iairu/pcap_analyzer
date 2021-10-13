@@ -41,5 +41,5 @@ class AnalyzeIP:
         print(f"IPv4")
         print(f"\_ Protocol:          0x{self.protocol.hex()} [{self.str_protocol(btoi(self.protocol))}]")
         print(f"\_ Source IP:         {delim(self.ip_src)} [{btoIPv4(self.ip_src)}]")
-        print(f"\_ Destin IP:         {delim(self.ip_dst)} [{btoIPv4(self.ip_dst)}]")
+        print(f"\_ Dest   IP:         {delim(self.ip_dst)} [{btoIPv4(self.ip_dst)}]")
         return

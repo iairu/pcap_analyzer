@@ -9,8 +9,8 @@ class Analyze:
     class Eth_stds:
         """ Supported Ethernet Standards """
         UNKNOWN = "Unknown"
-        IEEE_802_3_RAW = "IEEE 802.3 RAW"           # todo: check 802.2 802.3 if correct minor ver.
-        IEEE_802_3_LLCSNAP = "IEEE 802.3 LLC+SNAP"  # todo: check 802.2 802.3 if correct minor ver.
+        IEEE_802_3_RAW = "IEEE 802.3 RAW"
+        IEEE_802_3_LLCSNAP = "IEEE 802.3 LLC+SNAP"
         IEEE_802_3_LLC = "IEEE 802.3 LLC"
         ETHERNET2 = "Ethernet II"
 
@@ -79,7 +79,6 @@ class Analyze:
 
             # STANDARD
             dsap_or_raw = _bytes[14:16].hex() # 14-15 bajt (2B)
-            # todo \/ kontrola wireshark spravnost flagov
             # 802.3 RAW                     0xFFFF
             # 802.2 SNAP (== LLC + SNAP)    0xAAAA
             # 802.2 LLC                     0x____
@@ -145,7 +144,5 @@ class Analyze:
             if (self.eth_std == self.Eth_stds.IEEE_802_3_LLCSNAP):
                 print(f"SNAP Header:")
                 print(f"\_ Vendor, EthType:   {delim(self.vendor_code)}, 0x{self.eth_type.hex()} [{self.str_eth_type(btoi(self.eth_type))}]")
-
-        #todo anything else incl. missing
         
         return

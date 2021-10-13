@@ -11,6 +11,7 @@ import sys
 
 class Code:
     """Pseudo-enum class that contains all supported codes as args for close(code)."""
+    # todo: use python exceptions?
     SUCCESS = 0
     # FAILURE = 1
     INCORRECT_ARG_PATH = 10
