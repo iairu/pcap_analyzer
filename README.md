@@ -76,7 +76,8 @@ Here are some useful flags:
 
 - To set starting frame use `-f` (or `--first`).
 - To limit frames read and analyzed use `-c` (or `--count`).
-- To hide hexdumps use `--n` (shortened `--no-hexdump`)
+- To hide hexdumps use `--no-hexdump`.
+- To not calculate and hide sender leaderboard use `--no-leaderboard`.
 
 ### Performance concerns
 
