@@ -62,8 +62,9 @@ class Analyze:
 
     def __init__(self, _bytes: bytes):
         self.eth_std = self.Eth_stds.UNKNOWN
-        self.len = len(_bytes)
-        self.wirelen = 64 if (self.len <= 60) else self.len + 4
+        self.has_eth_type: bool = False
+        self.len: int = len(_bytes)
+        self.wirelen: int = 64 if (self.len <= 60) else self.len + 4
         # self.is_ipx: bool = False
 
         # DATA LINK HEADER
@@ -92,6 +93,7 @@ class Analyze:
         elif (len_or_type >= 1536):
             self.eth_std = self.Eth_stds.ETHERNET2
             self.eth_type = _bytes[12:14]
+            self.has_eth_type = True
             self.data = _bytes[14:] # 14 bajt po koniec
             return
         else:
@@ -110,6 +112,7 @@ class Analyze:
             if (self.eth_std == self.Eth_stds.IEEE_802_3_LLCSNAP):
                 self.vendor_code = _bytes[17:20] # 17-19 bajt (3B)
                 self.eth_type = _bytes[20:22] # 20-21 bajt (2B)
+                self.has_eth_type = True
                 self.data = _bytes[22:] # 22 bajt po koniec
             else: # self.eth_std == self.Eth_stds.IEEE_802_3_LLC
                 self.data = _bytes[17:] # 17 bajt po koniec
@@ -131,10 +134,8 @@ class Analyze:
             print(f"\_ EthType:           0x{self.eth_type.hex()} [{self.str_eth_type(btoi(self.eth_type))}]")
         else:
             print(f"\_ Length:            0x{self.eth_len.hex()} [{btoi(self.eth_len)}]")
-
             if (self.eth_std == self.Eth_stds.IEEE_802_3_RAW):
-                """soon"""
-                #print(f"IPX")
+                print(f"IPX")
             else:
                 print(f"LOGICAL LINK Header:")
                 print(f"\_ DSAP:              0x{self.dsap.hex()} [{self.str_sap(btoi(self.dsap))}]")
@@ -144,7 +145,7 @@ class Analyze:
             if (self.eth_std == self.Eth_stds.IEEE_802_3_LLCSNAP):
                 print(f"SNAP Header:")
                 print(f"\_ Vendor, EthType:   {delim(self.vendor_code)}, 0x{self.eth_type.hex()} [{self.str_eth_type(btoi(self.eth_type))}]")
-        
+
         #todo anything else incl. missing
         
         return
