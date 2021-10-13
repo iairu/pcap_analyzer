@@ -1,15 +1,17 @@
-0x00 Null SAP
-0x02 LLC SM / Individual
-0x03 LLC SM / Group
-0x06 IP (DoDIP)
-0x0E PROWAY Net
-0x42 BPDU / 802.1 STree
-0x4E MMS
-0x5E ISI IP
-0x7E X.25 PLP (ISO 8208)
-0x8E PROWAY ASL
-0xAA SNAP
-0xE0 IPX
-0xF4 LAN Management
-0xFE ISO Net Layer Protocols
-0xFF Global DSAP
+0x0200 XEROX PUP
+0x0201 PUP Addr Trans
+0x0800 IPv4
+0x0801 X.75 Internet
+0x0805 X.25 Level 3
+0x0806 ARP
+0x8035 Reverse ARP
+0x809B Appletalk
+0x80F3 AppleTalk AARP (Kinetics)
+0x8100 IEEE 802.1Q VLAN-tagged frames
+0x8137 IPX
+0x86DD IPv6
+0x880B PPP
+0x8847 MPLS
+0x8848 MPLS upstream label
+0x8863 PPPoE Discovery Stage
+0x8864 PPPoE Session Stage
