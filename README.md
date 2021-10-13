@@ -1,4 +1,6 @@
-# PCAP Analyzer
+# PCAP Analyzer KB
+
+**Ondrej Spanik** (iairu.com)
 
 Use at least Python 3.7
 
