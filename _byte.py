@@ -10,6 +10,17 @@ def btoi(_bytes: bytes) -> int:
         out += int(b)
     return out
 
+def btoIPv4(_bytes: bytes) -> str:
+    """Prints bytes in IPv4 format - Converts each B to int, adds a dot inbetween"""
+    out = ""
+    l = len(_bytes)
+    for i in range(l):
+        if (i != l - 1):
+            out += str(int(_bytes[i])) + "."
+        else:
+            out += str(int(_bytes[i]))
+    return out
+
 def delim(_bytes: bytes, delimiter: str = ":") -> str:
     """ Delimit a hex byte sequence, also turning it into string"""
     delimited = str()
