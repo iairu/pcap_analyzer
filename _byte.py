@@ -11,6 +11,7 @@ def btoi(_bytes: bytes) -> int:
     return out
 
 def delim(_bytes: bytes, delimiter: str = ":") -> str:
+    """ Delimit a hex byte sequence, also turning it into string"""
     delimited = str()
     undelimited = _bytes.hex()
     last = len(undelimited) - 1
@@ -32,10 +33,10 @@ def delim(_bytes: bytes, delimiter: str = ":") -> str:
 #     return _bytes[_fromByte:].hex()
 
 
-def printHexDump(_bytes: bytes):
+def printHexDump(_bytes: bytes, _each: int = 16, offset: int = 4):
     # print(getDelimitedString(_bytes, " ")) # todo newline each 8 bytes, how to iterate over bytes?
-    _each = 16 # bytes per row
-    offset = 8 # Max necessary length for the first column (row counter in hex)
+    # _each = 16 # bytes per row
+    # offset = 4 # Max necessary length for the first column (row counter in hex)
 
     def zeroPrefix(number: str, length: int) -> str:
         # Prefiex the given "number" by zeros until its length matches "length"
