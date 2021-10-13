@@ -52,7 +52,7 @@ Not all of the aforementioned packages are used in their entirety, but they're a
 
 ### Package version check
 
-In case of incompatibilities, detailed information about package versions in `PACKAGES.md` generated using `pip list > PACKAGES.md`. 
+In case of incompatibilities, detailed information about package versions in `requirements.txt` generated using `pip freeze > requirements.txt`. 
 
 Most of these packages are installed as dependencies automatically.
 
