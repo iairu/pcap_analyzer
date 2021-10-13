@@ -55,3 +55,23 @@ Not all of the aforementioned packages are used in their entirety, but they're a
 In case of incompatibilities, detailed information about package versions in `PACKAGES.md` generated using `pip list > PACKAGES.md`. 
 
 Most of these packages are installed as dependencies automatically.
+
+## Run
+
+To analyze all frames within a .pcap file and print all hexdumps followed by analysis results, simply use:
+```
+python __main__.py [path to pcap]
+```
+
+### Flags and help
+
+To get a list of up-to-date flags use `-h`
+
+```
+python __main__.py -h
+```
+Here are some useful flags:
+
+- To set starting frame use `-f` (or `--first`).
+- To limit frames read and analyzed use `-c` (or `--count`).
+- To hide hexdumps use `--n` (shortened `--no-hexdump`)
