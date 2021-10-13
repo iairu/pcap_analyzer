@@ -62,8 +62,8 @@ class Analyze:
 
     def __init__(self, _bytes: bytes):
         self.eth_std = self.Eth_stds.UNKNOWN
-        self.eth_lenint = -1
-        self.eth_len_wireint = -1
+        self.len = len(_bytes)
+        self.wirelen = 64 if (self.len <= 60) else self.len + 4
         # self.is_ipx: bool = False
 
         # DATA LINK HEADER
@@ -75,8 +75,6 @@ class Analyze:
         len_or_type = btoi(_bytes[12:14]) # 12-13 bajt (2B)
         if (len_or_type <= 1500):
             self.eth_len = _bytes[12:14]
-            self.eth_lenint = btoi(self.eth_len)
-            self.eth_len_wireint = 64 if (self.eth_lenint <= 60) else self.eth_lenint + 4 # todo: nesedi s wiresharkom
 
             # STANDARD
             dsap_or_raw = _bytes[14:16].hex() # 14-15 bajt (2B)
@@ -95,16 +93,10 @@ class Analyze:
             self.eth_std = self.Eth_stds.ETHERNET2
             self.eth_type = _bytes[12:14]
             self.data = _bytes[14:] # 14 bajt po koniec
-            
-            self.eth_lenint = -1 # todo: manual calc i guess?
-            self.eth_len_wireint = -1
             return
         else:
             self.eth_std = self.Eth_stds.UNKNOWN
             self.data = _bytes[14:] # assumed
-            
-            self.eth_lenint = -1 # todo: manual calc i guess?
-            self.eth_len_wireint = -1
             return
 
         # LOGICAL LINK HEADER +
@@ -128,7 +120,7 @@ class Analyze:
         return
 
     def print(self):
-        print(f"Length WIRE / API:    {self.eth_len_wireint} / {self.eth_lenint}")
+        print(f"Length WIRE / API:    {self.wirelen} B / {self.len} B")
         print(f"STANDARD:             {self.eth_std}")
 
         print(f"DATA LINK Header:")
