@@ -141,8 +141,8 @@ class SortComm:
             else:
                 tcp_udp_icmp = protocol
                 
-            port_src = ":" + f.anal_t.port_src if (f.anal_t != None and f.anal_t.port_src != None) else ""
-            port_dst = ":" + f.anal_t.port_dst if (f.anal_t != None and f.anal_t.port_dst != None) else ""
+            port_src = ":" + str(f.anal_t.port_src) if (f.anal_t != None and f.anal_t.port_src != None) else ""
+            port_dst = ":" + str(f.anal_t.port_dst) if (f.anal_t != None and f.anal_t.port_dst != None) else ""
 
             # Figure out if communication started/ended/continues
             curr_hash = hash(pair)
