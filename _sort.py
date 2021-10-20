@@ -180,7 +180,10 @@ class SortComm:
 
             # + Add some extra output
             if (not short):
-                out += f"{count}: Frame #{f.frame_no} is {protocol} from {ip_src}{port_src} to {ip_dst}{port_dst}\n"
+                out += f"{count}: Frame #{f.frame_no} is {protocol} from {ip_src}{port_src} to {ip_dst}{port_dst}"
+                if (protocol == "ICMP"):
+                    out += f" - {f.anal_t.str_icmp(f.anal_t.type)}"
+                out += "\n"
 
         if (count > 0):
             # Last ended (equivalent with Previous ended)

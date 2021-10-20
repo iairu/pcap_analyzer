@@ -2,7 +2,7 @@
 3 Destination Unreachable
 4 Source Quench
 5 Redirect
-8 Echo
+8 Echo Request
 9 Router Advertisement
 10 Router Selection
 11 Time Exceeded
