@@ -1,5 +1,5 @@
 """
-TCP, UDP and ICMP analysis
+Transport layer TCP, UDP analysis incl. Network layer ICMP analysis
 """
 from _byte import btoi, itobin, zeroPrefix
 from _reader import Protocols
