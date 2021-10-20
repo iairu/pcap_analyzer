@@ -58,6 +58,7 @@ class Protocols:
         IP = "ip_protocols.txt"
         TCP = "tcp_ports.txt"
         UDP = "udp_ports.txt"
+        ICMP = "icmp_types.txt"
 
     # ------------------------------------------
 
@@ -68,6 +69,7 @@ class Protocols:
             self.ip = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.IP, True)
             self.tcp = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.TCP, False)
             self.udp = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.UDP, False)
+            self.icmp = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.ICMP, False)
         except FileNotFoundError:
             close(Code.PROTOCOL_FILE_NOT_FOUND)
         return
@@ -86,3 +88,6 @@ class Protocols:
 
     def str_udp(self, code: int) -> str:
         return self.udp.get(code, "Unknown UDP Port")
+
+    def str_icmp(self, code: int) -> str:
+        return self.icmp.get(code, "Unknown ICMP type")
