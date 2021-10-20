@@ -3,7 +3,7 @@ Reads relevant .txt files in /protocols directory and saves them as dict(int,str
 """
 from _close import *
 
-def __protocolFileToDict__(filepath: str) -> dict:
+def __protocolFileToDict__(filepath: str, isHex: bool = False) -> dict:
     with open(filepath, "r") as fptr:
         out_dict: dict = {}
         # Parsing all rows
@@ -25,14 +25,26 @@ def __protocolFileToDict__(filepath: str) -> dict:
                         name += c
                     else:
                         code += c
-                # Finished parsing, check validity
-                if (code[0] != "0" and code[1] != "x"):
-                    close(Code.PROTOCOL_DEFINITION_WRONG)
-                else:
-                    try:
-                        _code = int(code, 16)
-                    except ValueError:
+                if (isHex):
+                    # HEX
+                    # Finished parsing, check validity
+                    if (len(code) <= 2 or code[0] != "0" or code[1] != "x"):
                         close(Code.PROTOCOL_DEFINITION_WRONG)
+                    else:
+                        try:
+                            _code = int(code, 16)
+                        except ValueError:
+                            close(Code.PROTOCOL_DEFINITION_WRONG)
+                else:
+                    # DECIMAL
+                    # Finished parsing, check validity
+                    if (len(code) < 1):
+                        close(Code.PROTOCOL_DEFINITION_WRONG)
+                    else:
+                        try:
+                            _code = int(code, 10)
+                        except ValueError:
+                            close(Code.PROTOCOL_DEFINITION_WRONG)
                 # Add to dict
                 out_dict[_code] = name
     return out_dict
@@ -51,11 +63,11 @@ class Protocols:
 
     def __init__(self):
         try:
-            self.eth_type = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.ETHTYPE)
-            self.sap = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.SAP)
-            self.ip = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.IP)
-            self.tcp = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.TCP)
-            self.udp = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.UDP)
+            self.eth_type = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.ETHTYPE, True)
+            self.sap = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.SAP, True)
+            self.ip = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.IP, True)
+            self.tcp = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.TCP, False)
+            self.udp = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.UDP, False)
         except FileNotFoundError:
             close(Code.PROTOCOL_FILE_NOT_FOUND)
         return
