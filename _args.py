@@ -16,6 +16,7 @@ class Args:
         argparser.add_argument("path",type=str, help="Path to a *.pcap file, from which to read network packets")
         argparser.add_argument("-f", "--first", type=int, help="Which frame to start from (default:1 = first)")
         argparser.add_argument("-c", "--count", type=int, help="Number of packets to read (default:-1 = all)")
+        argparser.add_argument("-s", "--sort", action="store_true", help="Sort communication")
         argparser.add_argument("--no-hexdump", action="store_true", help="Won't print hexdumps of any frame, otherwise all printed")
         argparser.add_argument("--no-leaderboard", action="store_true", help="Won't show or calculate top sender + leaderboard")
 
@@ -36,5 +37,6 @@ class Args:
         self.path = _path
         self.first = _first
         self.count = _count
+        self.sort = bool(arguments.sort)
         self.no_hexdump = bool(arguments.no_hexdump)
         self.no_leaderboard = bool(arguments.no_leaderboard)
