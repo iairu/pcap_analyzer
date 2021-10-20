@@ -1,7 +1,7 @@
 from _close import *
 from _args import Args
 from _analyze import Analyze
-from _analyze_ip import AnalyzeIP
+from _analyze_ip import AnalyzeIP, AnalyzeAfterIP
 from _reader import Protocols
 import _byte as byte
 import scapy.all as scapy
@@ -29,6 +29,7 @@ def main():
         anal.output()
 
         # IPv4 Analysis
+        anal_ip = None
         if (anal.has_eth_type and byte.btoi(anal.eth_type) == 0x800):
             anal_ip = AnalyzeIP(anal.data, protocols)
             anal_ip.output()
@@ -36,6 +37,11 @@ def main():
             if not (args.no_leaderboard):
                 sip = byte.btoIPv4(anal_ip.ip_src)
                 senders[sip] = 1 if not senders.get(sip) else senders[sip] + 1
+
+        # TCP/UDP/ICMP analysis
+        if (anal_ip != None):
+            anal_aip = AnalyzeAfterIP(anal_ip.data, anal_ip.protocol_str, protocols)
+            anal_aip.output()
 
     # Sender Leaderboard output
     if not (args.no_leaderboard):
