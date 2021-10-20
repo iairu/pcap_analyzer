@@ -74,6 +74,8 @@ class Protocols:
             close(Code.PROTOCOL_FILE_NOT_FOUND)
         return
 
+    # ------------------------------------------
+
     def str_eth_type(self, code: int) -> str:
         return self.eth_type.get(code,"Unknown ETH TYPE")
     
@@ -91,3 +93,24 @@ class Protocols:
 
     def str_icmp(self, code: int) -> str:
         return self.icmp.get(code, "Unknown ICMP type")
+
+    # ------------------------------------------
+
+
+    def int_ip(self, name: str) -> int:
+        for key, val in self.ip.items():
+            if (val == name):
+                return key
+        return -1
+
+    def int_tcp(self, name: str) -> int:
+        for key, val in self.tcp.items():
+            if (val == name):
+                return key
+        return -1
+
+    def int_udp(self, name: str) -> int:
+        for key, val in self.udp.items():
+            if (val == name):
+                return key
+        return -1

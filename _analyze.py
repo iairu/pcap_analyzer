@@ -26,6 +26,7 @@ class Analyze:
     def __init__(self, _bytes: bytes, protocols: Protocols):
         self._protocols = protocols
         
+        self.eth_type = None
         self.eth_std = self.Eth_stds.UNKNOWN
         self.has_eth_type: bool = False
         self.len: int = len(_bytes)
