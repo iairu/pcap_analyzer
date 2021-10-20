@@ -1,4 +1,4 @@
-# PCAP Analyzer KB
+# PCAP Analyzer FIN
 
 **Ondrej Spanik** (iairu.com)
 
@@ -97,3 +97,6 @@ This can be observed by simply running without any pcap file.
 | `_byte.py`    | Utilites for working with bytes<br />- Delimiting function (for example for MAC addresses)<br />- Bytes to Int function (builtin to Python only on newest versions, so I made my own)<br />- Hexdump function with configurable offset and byte count per row |
 | `_close.py`   | An output for user-caused and user-readable errors, incl. exit codes<br />- Used for unfixable errors caused by user<br />- Not used for errors caused by developer / bugs |
 
+## Build
+
+Build using pyinstaller, first `pip install pyinstaller`, then run `pyinstaller -F __main__.py` in root directory with VENV activated, which will output `__main__.exe` binary into `dist` folder. Make sure to copy `protocols` folder into the dist folder to include with built binary.

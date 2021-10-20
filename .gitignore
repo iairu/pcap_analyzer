@@ -7,3 +7,6 @@ Scripts
 share
 pyvenv.cfg
 *.code-workspace
+__main__.spec
+build
+dist
