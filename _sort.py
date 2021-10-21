@@ -128,6 +128,16 @@ class SortComm:
             # Frame in a communication
             f = pair.frame
 
+            # Figure out if communication started/ended/continues
+            curr_hash = hash(pair)
+
+            if (last_hash != None and last_hash != curr_hash):
+                # Previous ended
+                out += f"{tcp_udp_icmp} communication between {ip_src} and {ip_dst} finished in {count} frames.\n"
+                # out += f"Client was {client} with {from_client} requests.\n" # imprecise
+                # out += f"Server was {server} with {from_server} responses.\n" # imprecise
+                self.sorted_communications.append(self.SortableCommunication(first,out))
+
             # Communication details for this frame
             if (f.anal_ip != None):
                 ip_src = btoIPv4(f.anal_ip.ip_src)
@@ -143,16 +153,6 @@ class SortComm:
                 
             port_src = ":" + str(f.anal_t.port_src) if (f.anal_t != None and f.anal_t.port_src != None) else ""
             port_dst = ":" + str(f.anal_t.port_dst) if (f.anal_t != None and f.anal_t.port_dst != None) else ""
-
-            # Figure out if communication started/ended/continues
-            curr_hash = hash(pair)
-
-            if (last_hash != None and last_hash != curr_hash):
-                # Previous ended
-                out += f"{tcp_udp_icmp} communication between {ip_src} and {ip_dst} finished in {count} frames.\n"
-                # out += f"Client was {client} with {from_client} requests.\n" # imprecise
-                # out += f"Server was {server} with {from_server} responses.\n" # imprecise
-                self.sorted_communications.append(self.SortableCommunication(first,out))
 
             if (last_hash == None or last_hash != curr_hash):
                 # First or next communication started
@@ -187,10 +187,6 @@ class SortComm:
 
         if (count > 0):
             # Last ended (equivalent with Previous ended)
-            if (f.anal_t != None):
-                tcp_udp_icmp = f.anal_t.protocol_str
-            else:
-                tcp_udp_icmp = protocol
             out += f"{tcp_udp_icmp} communication between {ip_src} and {ip_dst} finished in {count} frames.\n"
             # out += f"Client was {client} with {from_client} requests.\n" # imprecise
             # out += f"Server was {server} with {from_server} responses.\n" # imprecise
