@@ -18,7 +18,7 @@ class Args:
         argparser.add_argument("-c", "--count", type=int, help="Number of packets to read (default:-1 = all)")
         argparser.add_argument("-s", "--sort-app-protocol", type=str, help="Retrieve sorted TCP/UDP communication for given protocol name (see tcp_ports.txt, udp_ports.txt)")
         argparser.add_argument("-ss", "--sort-short", action="store_true", help="Only output the first frame of TCP/UDP communication, use in conjunction with -s")
-        argparser.add_argument("-cp", "--count-protocol", type=str, help="Packets on given app protocol will be counted instead")
+        argparser.add_argument("-cp", "--count-protocol", type=str, help="Packets on given app protocol will be counted instead (only RIP supported right now)")
         argparser.add_argument("--no-hexdump", action="store_true", help="Won't print hexdumps of any frame, otherwise all printed")
         argparser.add_argument("--no-leaderboard", action="store_true", help="Won't show or calculate top sender + leaderboard")
 

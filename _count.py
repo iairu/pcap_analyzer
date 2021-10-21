@@ -32,4 +32,4 @@ class ProtocolCounter:
             f.print()
             f.printHexDump()
         print(f"Counted {self.counter} frames of {self.protocol_str} protocol.")
-        pass
+        return
