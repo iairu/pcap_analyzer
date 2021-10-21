@@ -1,0 +1,2 @@
+Uveďte počet všetkých rámcov vo vzorke s protokolom RIP (port 520) nad UDP. Tieto rámce aj vypíšte spolu s ich poradovým číslom v súbore.
+Trace-27

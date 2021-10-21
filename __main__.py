@@ -3,6 +3,7 @@ from _args import Args
 from _reader import Protocols
 from _frame import Frame
 from _sort import SortComm
+from _count import ProtocolCounter
 import _byte as byte
 import scapy.all as scapy
 
@@ -26,7 +27,7 @@ def main():
         frame.analyzeAll()
 
         # Frame unsorted printing or saving for later sorting
-        if (args.sort_app_protocol):
+        if (args.sort_app_protocol or args.count_protocol):
             frames.append(frame)
         else:
             frame.print()
@@ -41,6 +42,9 @@ def main():
     if (args.sort_app_protocol):
         sort = SortComm(args.sort_app_protocol, frames, protocols, args.sort_short)
         sort.print()
+    elif (args.count_protocol):
+        counter = ProtocolCounter(frames, args.count_protocol, protocols)
+        counter.print()
     else:
         # Sender Leaderboard output, not filtered for sorted communication
         if not (args.no_leaderboard):

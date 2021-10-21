@@ -18,6 +18,7 @@ class Args:
         argparser.add_argument("-c", "--count", type=int, help="Number of packets to read (default:-1 = all)")
         argparser.add_argument("-s", "--sort-app-protocol", type=str, help="Retrieve sorted TCP/UDP communication for given protocol name (see tcp_ports.txt, udp_ports.txt)")
         argparser.add_argument("-ss", "--sort-short", action="store_true", help="Only output the first frame of TCP/UDP communication, use in conjunction with -s")
+        argparser.add_argument("-cp", "--count-protocol", type=str, help="Packets on given app protocol will be counted instead")
         argparser.add_argument("--no-hexdump", action="store_true", help="Won't print hexdumps of any frame, otherwise all printed")
         argparser.add_argument("--no-leaderboard", action="store_true", help="Won't show or calculate top sender + leaderboard")
 
@@ -40,10 +41,13 @@ class Args:
         if (_sort_short == True and _sort_app_protocol == ""): 
             close(Code.SS_MISSING_ARG_PAIR)
 
+        _count_protocol = "" if (arguments.count_protocol == None) else str(arguments.count_protocol)
+
         # Returning all parsed arguments
         self.path = _path
         self.first = _first
         self.count = _count
+        self.count_protocol = _count_protocol
         self.sort_app_protocol = _sort_app_protocol
         self.sort_short = _sort_short
         self.no_hexdump = bool(arguments.no_hexdump)

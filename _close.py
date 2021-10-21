@@ -22,6 +22,7 @@ class Code:
     PROTOCOL_DEFINITION_WRONG = 50
     PROTOCOL_FILE_NOT_FOUND = 51
     SS_MISSING_ARG_PAIR = 60
+    COUNT_NYI = 70
 
 def close(_code=Code.SUCCESS):
     """Closes with given code, printing out related message."""
@@ -39,6 +40,7 @@ def close(_code=Code.SUCCESS):
         Code.PROTOCOL_DEFINITION_WRONG: "Incorrect protocol definition in one of ./protocols text files.\nMake sure to use 0xNN hex format delimited from protocol name by a single space (e.g. 0xAA SNAP).\nFor TCP/UDP ports make sure to use decimal format instead.",
         Code.PROTOCOL_FILE_NOT_FOUND: "Missing a file with protocols. Verify all _reader.py/ProtocolFileMap files are present in the ./protocols subfolder.",
         Code.SS_MISSING_ARG_PAIR: "Missing argument pair for -ss, make sure to use -s as well.",
+        Code.COUNT_NYI: "Counter not implemented for this protocol yet.",
     }
     print("Wasted: " + switch.get(_code, "Closed unexpectedly."))
     print("Use -h for help.")
