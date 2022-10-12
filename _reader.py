@@ -3,7 +3,7 @@ Reads relevant .txt files in /protocols directory and saves them as dict(int,str
 """
 from _close import *
 
-def __protocolFileToDict__(filepath: str) -> dict:
+def __protocolFileToDict__(filepath: str, int_instead_of_hex: bool = False) -> dict:
     with open(filepath, "r") as fptr:
         out_dict: dict = {}
         # Parsing all rows
@@ -27,7 +27,13 @@ def __protocolFileToDict__(filepath: str) -> dict:
                         code += c
                 # Finished parsing, check validity
                 if (code[0] != "0" and code[1] != "x"):
-                    close(Code.PROTOCOL_DEFINITION_WRONG)
+                    if (not int_instead_of_hex):
+                        close(Code.PROTOCOL_DEFINITION_WRONG)
+                    else:
+                        try:
+                            _code = int(code)
+                        except ValueError:
+                            close(Code.PROTOCOL_DEFINITION_WRONG)
                 else:
                     try:
                         _code = int(code, 16)
@@ -55,8 +61,8 @@ class Protocols:
             self.eth_type = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.ETHTYPE)
             self.sap = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.SAP)
             self.ip = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.IP)
-            self.tcp = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.TCP)
-            self.udp = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.UDP)
+            self.tcp = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.TCP, True)
+            self.udp = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.UDP, True)
             self.pid = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.PID)
         except FileNotFoundError:
             close(Code.PROTOCOL_FILE_NOT_FOUND)
