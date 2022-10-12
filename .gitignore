@@ -10,3 +10,4 @@ pyvenv.cfg
 __main__.spec
 build
 dist
+/*.yaml
