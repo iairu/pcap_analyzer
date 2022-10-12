@@ -77,10 +77,17 @@ class Analyze:
             self.control = _bytes[16:17] # (1B)
             # SNAP HEADER
             if (self.eth_std == self.Eth_stds.IEEE_802_3_LLCSNAP):
-                self.vendor_code = _bytes[17:20] # 17-19 bajt (3B)
-                self.eth_type = _bytes[20:22] # 20-21 bajt (2B)
+                # ISL check/fix
+                isl_offset = 0
+                if (delim(self.eth_dst) in ["01:00:0c:00:00:00","03:00:0c:00:00:00"]):
+                    isl_offset = 26 # posun kvoli ISL
+                    self.eth_dst = _bytes[0+isl_offset:6+isl_offset] # 0-5 bajt (6B)
+                    self.eth_src = _bytes[6+isl_offset:12+isl_offset] # 6-11 bajt (6B)
+                # all LLC+SNAP cases
+                self.vendor_code = _bytes[17+isl_offset:20] # 17-19 bajt (3B)
+                self.eth_type = _bytes[20+isl_offset:22+isl_offset] # 20-21 bajt (2B)
                 self.has_eth_type = True
-                self.data = _bytes[22:] # 22 bajt po koniec
+                self.data = _bytes[22+isl_offset:] # 22 bajt po koniec
             else: # self.eth_std == self.Eth_stds.IEEE_802_3_LLC
                 self.data = _bytes[17:] # 17 bajt po koniec
         return
