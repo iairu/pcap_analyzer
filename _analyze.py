@@ -11,7 +11,7 @@ class Analyze:
         """ Supported Ethernet Standards """
         UNKNOWN = "Unknown"
         IEEE_802_3_RAW = "IEEE 802.3 RAW"
-        IEEE_802_3_LLCSNAP = "IEEE 802.3 LLC+SNAP"
+        IEEE_802_3_LLCSNAP = "IEEE 802.3 LLC & SNAP"
         IEEE_802_3_LLC = "IEEE 802.3 LLC"
         ETHERNET2 = "Ethernet II"
 
@@ -22,6 +22,9 @@ class Analyze:
 
     def str_eth_type(self, code: int): 
         return self._protocols.str_eth_type(code)
+
+    def str_pid(self, code: int): 
+        return self._protocols.str_pid(code)
 
     def __init__(self, _bytes: bytes, protocols: Protocols):
         self._protocols = protocols
@@ -83,7 +86,7 @@ class Analyze:
         return
 
     def output(self, frame_number):
-        # Packet output dictionary
+        # Packet output dictionary, this year's edition
         out = {}
         out["frame_number"] = frame_number
         out["len_frame_pcap"] = self.len
@@ -91,10 +94,27 @@ class Analyze:
         out["frame_type"] = self.eth_std
         out["src_mac"] = delim(self.eth_src)
         out["dst_mac"] = delim(self.eth_dst)
-        # todo: add the rest
+
+        if (self.eth_std == self.Eth_stds.ETHERNET2):
+            ether_type = self.str_eth_type(btoi(self.eth_type))
+            if (ether_type != "Unknown"):
+                out["ether_type"] = ether_type
+        else:
+            if (self.eth_std == self.Eth_stds.IEEE_802_3_RAW):
+                out["sap"] = "IPX"
+            elif (self.eth_std == self.Eth_stds.IEEE_802_3_LLC):
+                sap = self.str_sap(btoi(self.dsap))
+                if (sap != "Unknown"):
+                    out["sap"] = sap
+            elif (self.eth_std == self.Eth_stds.IEEE_802_3_LLCSNAP):
+                pid = self.str_pid(btoi(self.eth_type))
+                if (pid != "Unknown"):
+                    out["pid"] = pid
+
         return out
 
     def print(self):
+        # Last year's edition
         print(f"Length WIRE / API:    {self.wirelen} B / {self.len} B")
         print(f"STANDARD:             {self.eth_std}")
 

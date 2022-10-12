@@ -46,6 +46,7 @@ class Protocols:
         IP = "ip_protocols.txt"
         TCP = "tcp_ports.txt"
         UDP = "udp_ports.txt"
+        PID = "snap_pids.txt"
 
     # ------------------------------------------
 
@@ -56,21 +57,25 @@ class Protocols:
             self.ip = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.IP)
             self.tcp = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.TCP)
             self.udp = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.UDP)
+            self.pid = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.PID)
         except FileNotFoundError:
             close(Code.PROTOCOL_FILE_NOT_FOUND)
         return
 
     def str_eth_type(self, code: int) -> str:
-        return self.eth_type.get(code,"Unknown ETH TYPE")
+        return self.eth_type.get(code,"Unknown")
     
     def str_sap(self, code: int) -> str:
-        return self.sap.get(code, "Unknown SAP")
+        return self.sap.get(code, "Unknown")
 
     def str_ip(self, code: int) -> str:
-        return self.ip.get(code, "Unknown IP Protocol")
+        return self.ip.get(code, "Unknown")
 
     def str_tcp(self, code: int) -> str:
-        return self.tcp.get(code, "Unknown TCP Port")
+        return self.tcp.get(code, "Unknown")
 
     def str_udp(self, code: int) -> str:
-        return self.udp.get(code, "Unknown UDP Port")
+        return self.udp.get(code, "Unknown")
+
+    def str_pid(self, code: int) -> str:
+        return self.pid.get(code, "Unknown")

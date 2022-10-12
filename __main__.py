@@ -46,7 +46,7 @@ def main():
 
     output: dict = {}
     output["name"] = "PKS2022/23"
-    output["pcap_name"] = "all.pcap" # todo: replace me
+    output["pcap_name"] = args.path
     output["packets"] = pkts_out
 
     if (args.print):

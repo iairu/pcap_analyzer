@@ -1,17 +1,55 @@
-0x0200 XEROX PUP
-0x0201 PUP Addr Trans
 0x0800 IPv4
-0x0801 X.75 Internet
-0x0805 X.25 Level 3
 0x0806 ARP
-0x8035 Reverse ARP
-0x809B Appletalk
-0x80F3 AppleTalk AARP (Kinetics)
-0x8100 IEEE 802.1Q VLAN-tagged frames
+0x0842 Wake-on-LAN
+0x22F0 AVTP
+0x22F3 IETF TRILL 
+0x22EA Stream Reservation 
+0x6002 DEC MOP RC
+0x6003 DECnet Phase IV, DNA Routing
+0x6004 DEC LAT
+0x8035 RARP
+0x809B Ethertalk
+0x80F3 AARP
+0x8100 IEEE 802.1Q
+0x8102 SLPP
+0x8103 VLACP
 0x8137 IPX
+0x8204 QNX Qnet
 0x86DD IPv6
-0x880B PPP
-0x8847 MPLS
-0x8848 MPLS upstream label
-0x8863 PPPoE Discovery Stage
-0x8864 PPPoE Session Stage
+0x8808 Ethernet flow control
+0x8809 LACP
+0x8819 CobraNet
+0x8847 MPLS unicast
+0x8848 MPLS multicast
+0x8863 PPPoE Discovery 
+0x8864 PPPoE Session 
+0x887B HomePlug 1.0 MME
+0x888E IEEE 802.1X
+0x8892 PROFINET 
+0x889A SCSI over Ethernet
+0x88A2 ATA over Ethernet
+0x88A4 EtherCAT 
+0x88A8 S-Tag
+0x88AB Ethernet Powerlink[citation needed]
+0x88B8 Generic Object Oriented Substation event
+0x88B9 Generic Substation Events
+0x88BA Sampled Value Transmission
+0x88BF unofficial
+0x88CC LLDP
+0x88CD SERCOS III
+0x88E1 HomePlug Green PHY
+0x88E3 IEC62439-2
+0x88E5 MACsec
+0x88E7 IEEE 802.1ah
+0x88F7 PTP
+0x88F8 NC-SI
+0x88FB PRP
+0x8902 OAM
+0x8906 FCoE
+0x8914 FCoE Initialization 
+0x8915 RoCE
+0x891D TTE
+0x893a 1905.1 IEEE 
+0x892F HSR
+0x9000 ECTP
+0xF1C1 IEEE 802.1CB Frame Replication and Elimination for Reliability
