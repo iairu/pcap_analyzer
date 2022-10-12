@@ -16,8 +16,8 @@ class Args:
         argparser.add_argument("path",type=str, help="Path to a *.pcap file, from which to read network packets")
         argparser.add_argument("-f", "--first", type=int, help="Which frame to start from (default:1 = first)")
         argparser.add_argument("-c", "--count", type=int, help="Number of packets to read (default:-1 = all)")
-        argparser.add_argument("--print", action="store_true", help="Print instead of YAML output")
-        argparser.add_argument("--no-hexdump", action="store_true", help="Won't output hexdumps of any frame, otherwise all printed")
+        argparser.add_argument("-o", "--output", type=str, help="Path to output YAML file - if omitted 'out.yaml' will be used")
+        argparser.add_argument("--print", action="store_true", help="Print YAML output to STDOUT instead of saving to file")
         # argparser.add_argument("--no-leaderboard", action="store_true", help="Won't show or calculate top sender + leaderboard")
 
         # Parsing
@@ -35,10 +35,12 @@ class Args:
         
         _print = int(False if (arguments.print == None) else arguments.print)
 
+        _output = str("out.yaml" if (arguments.output == None) else arguments.output)
+
         # Returning all parsed arguments
         self.path = _path
         self.first = _first
         self.count = _count
         self.print = _print
-        self.no_hexdump = bool(arguments.no_hexdump)
+        self.output = _output
         # self.no_leaderboard = bool(arguments.no_leaderboard)

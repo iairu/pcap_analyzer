@@ -45,7 +45,7 @@ def delim(_bytes: bytes, delimiter: str = ":") -> str:
 
 
 def printHexDump(_bytes: bytes, _each: int = 16, offset: int = 4):
-    # print(getDelimitedString(_bytes, " ")) # todo newline each 8 bytes, how to iterate over bytes?
+    # print(getDelimitedString(_bytes, " "))
     # _each = 16 # bytes per row
     # offset = 4 # Max necessary length for the first column (row counter in hex)
 
@@ -71,3 +71,13 @@ def printHexDump(_bytes: bytes, _each: int = 16, offset: int = 4):
         _from += _each
         _to += _each
     return
+
+def outputHexDump(_bytes: bytes, _each: int = 16):
+    out = ""
+    _from = 0
+    _to = _each
+    while(len( _bytes[ _from : _to ] ) > 0):
+        out += delim( _bytes[ _from : _to ], " ") + "\n"
+        _from += _each
+        _to += _each
+    return out

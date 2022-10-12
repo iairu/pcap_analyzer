@@ -82,9 +82,17 @@ class Analyze:
                 self.data = _bytes[17:] # 17 bajt po koniec
         return
 
-    def output(self):
-        self.print()
-        return
+    def output(self, frame_number):
+        # Packet output dictionary
+        out = {}
+        out["frame_number"] = frame_number
+        out["len_frame_pcap"] = self.len
+        out["len_frame_medium"] = self.wirelen
+        out["frame_type"] = self.eth_std
+        out["src_mac"] = delim(self.eth_src)
+        out["dst_mac"] = delim(self.eth_dst)
+        # todo: add the rest
+        return out
 
     def print(self):
         print(f"Length WIRE / API:    {self.wirelen} B / {self.len} B")
