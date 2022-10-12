@@ -1,6 +1,14 @@
 """
 Utilities for conversion of bytes into int, hex and dumping bytes as a hexdump.
 """
+def zeroPrefix(number: str, length: int) -> str:
+    """Prefiex the given "number" by zeros until its length matches "length"""
+    out = number
+    length -= len(out)
+    while(length):
+        out = "0" + out
+        length -= 1
+    return out
 
 def btoi(_bytes: bytes) -> int:
     """Bytes to Int conversion"""
@@ -8,6 +16,18 @@ def btoi(_bytes: bytes) -> int:
     for b in _bytes:
         out *= 256
         out += int(b)
+    return out
+
+def itobin(_int: int) -> str:
+    """ Int to Binary string conversion until 0"""
+    out = ""
+    while (_int != 0): # no active bits left
+        mask = 1 # last bit
+        if (mask & _int): # if last bit active
+            out = "1" + out
+        else:
+            out = "0" + out
+        _int = _int >> 1 # drop last bit
     return out
 
 def btoIPv4(_bytes: bytes) -> str:
@@ -48,16 +68,6 @@ def printHexDump(_bytes: bytes, _each: int = 16, offset: int = 4):
     # print(getDelimitedString(_bytes, " "))
     # _each = 16 # bytes per row
     # offset = 4 # Max necessary length for the first column (row counter in hex)
-
-    def zeroPrefix(number: str, length: int) -> str:
-        # Prefiex the given "number" by zeros until its length matches "length"
-        out = number
-        length -= len(out)
-        while(length):
-            out = "0" + out
-            length -= 1
-        return out
-
     
     _from = 0
     _to = _each

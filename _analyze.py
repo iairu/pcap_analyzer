@@ -85,10 +85,8 @@ class Analyze:
                 self.data = _bytes[17:] # 17 bajt po koniec
         return
 
-    def output(self, frame_number):
+    def output(self, out):
         # Packet output dictionary, this year's edition
-        out = {}
-        out["frame_number"] = frame_number
         out["len_frame_pcap"] = self.len
         out["len_frame_medium"] = self.wirelen
         out["frame_type"] = self.eth_std
