@@ -11,3 +11,5 @@ __main__.spec
 build
 dist
 /*.yaml
+*.zip
+/notes.txt
