@@ -37,7 +37,7 @@ class Analyze:
 
         # DATA LINK HEADER
         # \_ MAC
-        self.eth_dst = _bytes[0:6] # 0-5 bajt (6B)
+        self.eth_dst = _bytes[0:6] # 0-5 bajt (6B) # todo: isl kontrolovat uz tu
         self.eth_src = _bytes[6:12] # 6-11 bajt (6B)
 
         # \_ LENGTH + STANDARD || ETHERTYPE
