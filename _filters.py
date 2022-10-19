@@ -26,13 +26,12 @@ def completionARP(all: list[dict], protocols: Protocols, meta: dict):
         opcode = pkt_out["arp_opcode"]
         src_ip = pkt_out["src_ip"]
         dst_ip = pkt_out["dst_ip"]
+        comm_identifier = str(src_ip) + ":" + str(dst_ip)
         if (opcode == protocols.str_arp_opcode(1)): # request
-            comm_identifier = str(src_ip) + ":" + str(dst_ip)
             matcher.append([0, comm_identifier, 1, pkt_out])
             # /\ [0 meaning unmatched, -comm_num meaning rematchable, comm_num for non-rematchable, 
             # common communication identifier, opcode, pkt_out]
         elif (opcode == protocols.str_arp_opcode(2)): # reply
-            comm_identifier = str(dst_ip) + ":" + str(src_ip)
             first_done = False
             for inc in matcher:
                 if (inc[0] <= 0 and comm_identifier == inc[1] and inc[2] == 1):
@@ -90,7 +89,62 @@ def completionICMP(all: list[dict], protocols: Protocols, meta: dict):
 
     # assign incomplete and complete-for-matching communications
     for pkt_out in all:
-        icmp_id = pkt_out["id"]
+        icmp_type = pkt_out.get("icmp_type")
+        src_ip = pkt_out.get("src_ip")
+        dst_ip = pkt_out.get("dst_ip")
+        _id = pkt_out.get("id")
+        comm_identifier = str(src_ip) + ":" + str(dst_ip) + ":" + str(_id)
+        if (icmp_type == None):
+            matcher.append([0, comm_identifier, pkt_out])
+
+        elif (icmp_type == protocols.str_icmp_type(8)): # echo request, start communication as incomplete
+            for m in matcher: # set any related fragments to this communication
+                if (m[0] == 0 and m[1] == comm_identifier): # related fragment
+                    m[0] = -comm_num
+            matcher.append([-comm_num, comm_identifier, pkt_out])
+
+        elif (icmp_type == protocols.str_icmp_type(0)): # echo reply, end communication (complete if it had requests prior)
+            had_requests = False
+            k = [] # to get back to initial reply fragments when completness wasn't yet sure
+            for i, m in enumerate(matcher): # set any related fragments to this communication
+                if (m[0] == 0 and m[1] == comm_identifier): # related fragment
+                    k.append(i)
+                    m[0] = -comm_num # set incompletness
+                elif (m[0] == -comm_num):
+                    had_requests = True
+                    m[0] = comm_num # set completness of this packet
+            if (had_requests):
+                for i in k: # set completness of any related fragments
+                    matcher[i][0] = comm_num
+            matcher.append([-comm_num if (not had_requests) else comm_num, comm_identifier, pkt_out])
+            comm_num += 1 # end this communication
+
+        else:
+            incomplete.append({"number_comm": incomplete_comm_num, "packets": [pkt_out]})
+            incomplete_comm_num += 1
+
+    # match complete communications
+    for m in matcher:
+        comm_num = m[0] # abs, because communication assignments are by now finalized
+        comm_identifier = m[1]
+        pkt_out = m[2]
+
+        if (comm_num <= 0):
+            # we didn't find a pair = incomplete
+            incomplete.append({"number_comm": incomplete_comm_num, "packets": [pkt_out]})
+            incomplete_comm_num += 1
+        else:
+            i = comm_num - 1
+            out_of_bounds = True if i >= len(complete) else False
+            if (out_of_bounds):
+                # add as a new complete communication
+                comm_ips = comm_identifier.split(":")
+                complete.append({"number_comm": complete_comm_num, "src_comm": comm_ips[0], "dst_comm": comm_ips[1], "packets": [pkt_out]})
+                complete_comm_num += 1
+            else:
+                # add to existing complete communication
+                complete[i]["packets"].append(pkt_out)
+
         
 
     return [complete, incomplete]
@@ -100,7 +154,7 @@ filterICMP = Filter("ICMP", matchICMP, completionICMP) # todo + add to supported
 # filterTFTP = Filter("TFTP", matchTFTP, completionTFTP) # todo + add to supported below
 
 class Filters:
-    supported: list[Filter] = [filterARP]
+    supported: list[Filter] = [filterARP, filterICMP]
 
     # Get info if queried filter is supported and if so, return it
     def grab(self, name: str):

@@ -40,8 +40,7 @@ class AnalyzeIP:
             out["id"] = self.id
             out["flags_mf"] = self.flags_mf
             out["frag_offset"] = self.frag_offset
-            if (not self.flags_mf): # only show protocol as ICMP if no more fragments
-                out["protocol"] = self.protocol_str
+            out["protocol"] = self.protocol_str
         else:
             out["protocol"] = self.protocol_str
         return out
