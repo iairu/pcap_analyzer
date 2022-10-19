@@ -21,6 +21,7 @@ class Code:
     INCORRECT_ARG_FIRST_TOO_HIGH = 31
     PROTOCOL_DEFINITION_WRONG = 50
     PROTOCOL_FILE_NOT_FOUND = 51
+    PROTOCOL_NOT_SUPPORTED = 52
 
 def close(_code=Code.SUCCESS):
     """Closes with given code, printing out related message."""
@@ -37,6 +38,7 @@ def close(_code=Code.SUCCESS):
         Code.INCORRECT_ARG_FIRST_TOO_HIGH: "Argument 'first' too high - Verify number of packets first.",
         Code.PROTOCOL_DEFINITION_WRONG: "Incorrect protocol definition in one of ./protocols text files. Make sure to use 0xNN hex format delimited from protocol name by a single space (e.g. 0xAA SNAP).",
         Code.PROTOCOL_FILE_NOT_FOUND: "Missing a file with protocols. Verify all _reader.py/ProtocolFileMap files are present in the ./protocols subfolder.",
+        Code.PROTOCOL_NOT_SUPPORTED: "Selected protocol is not currently supported.",
     }
     print("Wasted: " + switch.get(_code, "Closed unexpectedly."))
     print("Use -h for help.")

@@ -5,6 +5,7 @@ First thing that the CLI should work with really...
 
 """
 from _close import *
+from _filters import Filters
 import os
 import argparse
 
@@ -18,6 +19,7 @@ class Args:
         argparser.add_argument("-c", "--count", type=int, help="Number of packets to read (default:-1 = all)")
         argparser.add_argument("-o", "--output", type=str, help="Path to output YAML file - if omitted 'out.yaml' will be used")
         argparser.add_argument("--print", action="store_true", help="Print YAML output to STDOUT instead of saving to file")
+        argparser.add_argument("-p", "--protocol", type=str, help="Filter by a supported protocol")
         # argparser.add_argument("--no-leaderboard", action="store_true", help="Won't show or calculate top sender + leaderboard")
 
         # Parsing
@@ -33,7 +35,9 @@ class Args:
         _count = int(-1 if (arguments.count == None) else arguments.count) # -1 means all for compatibility with scapy
         if (_count < -1): close(Code.INCORRECT_ARG_COUNT)
         
-        _print = int(False if (arguments.print == None) else arguments.print)
+        _print = False if (arguments.print == None) else arguments.print
+
+        _protocol = None if (arguments.protocol == None) else arguments.protocol
 
         _output = str("out.yaml" if (arguments.output == None) else arguments.output)
 
@@ -42,5 +46,6 @@ class Args:
         self.first = _first
         self.count = _count
         self.print = _print
+        self.protocol = _protocol
         self.output = _output
         # self.no_leaderboard = bool(arguments.no_leaderboard)

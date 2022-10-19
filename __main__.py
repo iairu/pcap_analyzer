@@ -7,6 +7,7 @@ from _analyze import Analyze
 from _analyze_ip import AnalyzeIP
 from _analyze_t import AnalyzeTransport
 from _reader import Protocols
+from _filters import Filters
 import _byte as byte
 import scapy.all as scapy
 
@@ -22,6 +23,14 @@ def main():
     count = len(packets) - offset # packets[0] is first if count > 0, packets[count-1] is last
     if (count == 0): close(Code.INCORRECT_ARG_COUNT_ZERO)
     if (count < 0): close(Code.INCORRECT_ARG_FIRST_TOO_HIGH)
+
+    filt = None # Filter was not requested by user
+    if (args.protocol != None):
+        filters = Filters()
+        filt = filters.grab(args.protocol)
+        if (filt == None):
+            # Filter was requested by user but not supported
+            close(Code.PROTOCOL_NOT_SUPPORTED)
 
     # YAML output to file
     yaml = ruamel.yaml.YAML()
@@ -57,13 +66,25 @@ def main():
         pkt_out["hexa_frame"] = LiteralScalarString(byte.outputHexDump(pkt_bytes))
 
         # Add finished packet output to the list
-        pkts_out.append(pkt_out)
+        if (filt == None):
+            pkts_out.append(pkt_out)
+        else:
+            filt.matchAdd(pkt_out, pkt_bytes)
 
     # Header values for output and list of packet outputs
     output: dict = {}
     output["name"] = "PKS2022/23"
     output["pcap_name"] = args.path
-    output["packets"] = pkts_out
+    if (filt == None):
+        # No filter requested by user
+        output["packets"] = pkts_out
+    else:
+        # Supported filter requested by user
+        output["filter_name"] = filt.name
+        filt.completion()
+        output["complete_comms"] = filt.complete # todo: in Filter redefine complete as dict {number_comm, src_com, dst_comm, packets = part of Filter.complete}
+        output["partial_comms"] = filt.incomplete # todo: /\, also if empty then don't assign
+        
 
     # Save the dict as YAML
     if (args.print):
