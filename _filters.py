@@ -149,11 +149,33 @@ def completionICMP(all: list[dict], protocols: Protocols, meta: dict):
 
     return [complete, incomplete]
 
-filterARP = Filter("ARP", matchARP, completionARP) # todo
-filterICMP = Filter("ICMP", matchICMP, completionICMP) # todo + add to supported below
-# filterTFTP = Filter("TFTP", matchTFTP, completionTFTP) # todo + add to supported below
+def completionTFTP(all: list[dict], protocols: Protocols, meta: dict):
+    complete_comm_num = 1
+    complete = []
+
+    incomplete_comm_num = 1
+    incomplete = []
+
+    comm_num = 1
+    matcher = meta
+
+    # assign incomplete and complete communications
+    for m in matcher:
+        if (m[6] == True and m[7] == True):
+            complete.append({"number_comm": complete_comm_num, "src_comm": m[0], "dst_comm": m[1], "packets": m[4]})
+            complete_comm_num += 1
+        else:
+            incomplete.append({"number_comm": incomplete_comm_num, "src_comm": m[0], "dst_comm": m[1], "packets": m[4]})
+            incomplete_comm_num += 1
+
+    return [complete, incomplete]
+
+filterARP = Filter("ARP", matchARP, completionARP)
+filterICMP = Filter("ICMP", matchICMP, completionICMP)
+filterTFTP = Filter("TFTP", None, completionTFTP) # todo currently work in progress
 
 class Filters:
+    # supported: list[Filter] = [filterARP, filterICMP, filterTFTP]
     supported: list[Filter] = [filterARP, filterICMP]
 
     # Get info if queried filter is supported and if so, return it

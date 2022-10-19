@@ -8,6 +8,7 @@ from _analyze_ip import AnalyzeIP
 from _analyze_t import AnalyzeTransport
 from _analyze_arp import AnalyzeARP
 from _analyze_icmp import AnalyzeICMP
+from _analyze_tftp import AnalyzeTFTP
 from _reader import Protocols
 from _filters import Filters
 import _byte as byte
@@ -43,8 +44,13 @@ def main():
     # List of remaining unmatched fragments for ICMP analysis
     unmatched_icmp_fragments: list[bytes] = []
 
+    # List of active tftp ports as [client, server]
+    # tftp_active = [["", -1, 69]]
+    tftp_active = []
+
     # Save IPv4 senders and number of packets they sent
     senders = {}
+
 
     # Process individual packet bytes into packet outputs
     for i in range(count):
@@ -66,6 +72,7 @@ def main():
             anal_ip.output(pkt_out) # append to existing output
 
         # Then Transport layer analysis
+        anal_t = None
         if (anal_ip != None):
             anal_t = AnalyzeTransport(anal_ip.data, anal_ip.protocol_str, protocols)
             anal_t.output(pkt_out) # append to existing output
@@ -80,10 +87,43 @@ def main():
             anal_icmp = AnalyzeICMP(anal_ip, unmatched_icmp_fragments, protocols)
             anal_icmp.output(pkt_out)
 
+        # Check if TFTP and assign TFTP active communication if so
+        tftp_num = -1
+        if (anal_t != None and byte.btoi(anal_ip.protocol) == 0x11): # only if IPv4 protocol is UDP and destination port 69
+            if (anal_t.port_dst == 69): # starting port server-side
+                tftp_active.append([anal_ip.ip_src, anal_ip.ip_dst, anal_t.port_src, anal_t.port_dst, [], -1, False, False]) 
+                # pkt_out["sub_protocol"] = "TFTP"
+                # save tftp ips and ports then all pkt_out [4], last data length [5], if communication starts properly [6], if communication ends properly [7]
+                tftp_num = len(tftp_active) - 1
+            else:
+                for i, tftp in enumerate(tftp_active): # ports changed
+                    if (tftp[0] == anal_ip.ip_dst and tftp[1] == anal_ip.ip_src and tftp[2] == anal_t.port_dst):
+                        tftp[3] = anal_t.port_src
+                        # pkt_out["sub_protocol"] = "TFTP"
+                        tftp_num = i
+                    elif (tftp[0] == anal_ip.ip_src and tftp[1] == anal_ip.ip_dst and tftp[1] == anal_t.port_src):
+                        tftp[3] = anal_t.port_dst
+                        # pkt_out["sub_protocol"] = "TFTP"
+                        tftp_num = i
+                    else:
+                        tftp_num = -1 # not tftp
+
         # Save IPv4 senders and number of packets they sent
         if (anal_ip != None):
             src_ip = byte.btoIPv4(anal_ip.ip_src)
             senders[src_ip] = 1 if not senders.get(src_ip) else senders[src_ip] + 1
+
+        # Handle TFTP analysis and communication completion
+        if (tftp_num >= 0):
+            tftp_active[tftp_num][4].append(pkt_out)
+            last_tftp_datalen = tftp_active[tftp_num][5]
+            anal_tftp = AnalyzeTFTP(pkt_bytes, last_tftp_datalen)
+            anal_tftp.output(pkt_out)
+            tftp_active[tftp_num][5] = anal_tftp.data_len
+            if (anal_tftp.started):
+                tftp_active[tftp_num][6] = True
+            if (anal_tftp.complete):
+                tftp_active[tftp_num][7] = True
 
         # Add hexdump to the end of packet output (processed for correct YAML output)
         pkt_out["hexa_frame"] = LiteralScalarString(byte.outputHexDump(pkt_bytes))
@@ -92,7 +132,8 @@ def main():
         if (filt == None):
             pkts_out.append(pkt_out)
         else:
-            filt.matchAdd(pkt_out, protocols)
+            if (filt.name != "TFTP"):
+                filt.matchAdd(pkt_out, protocols)
 
     # Header values for output and list of packet outputs
     output: dict = {}
@@ -123,7 +164,7 @@ def main():
     else:
         # Supported filter requested by user
         output["filter_name"] = filt.name
-        filt.completion(protocols)
+        filt.completion(protocols, {"tftp_active": tftp_active})
         output["complete_comms"] = filt.complete # todo: in Filter redefine complete as dict {number_comm, src_com, dst_comm, packets = part of Filter.complete}
         output["partial_comms"] = filt.incomplete # todo: /\, also if empty then don't assign
         

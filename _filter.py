@@ -27,7 +27,7 @@ from typing import Callable
 from _reader import Protocols
 
 class Filter(object):
-    def __init__(self, name: str, matcherFunc: Callable, completionFunc: Callable):
+    def __init__(self, name: str, matcherFunc: Callable | None, completionFunc: Callable | None):
         self.name = name
 
         self._match = matcherFunc # bool = matcherFunc(pkt_out: dict, pkt_bytes: bytes)
@@ -38,20 +38,17 @@ class Filter(object):
         self.complete: list[dict] = []
         self.incomplete: list[dict] = []
 
-        # Arbitrary meta information (such as a cache) shared between all match and extract calls
-        self.meta: dict = {}
-
     # match if the given packet belongs to the protocol named in this filter, then
     # extract only relevant packet information for further filtering (e.g. communication buckets), then
     # add to self.all (e.g. to be ready for completion())
     def matchAdd(self, pkt_out: dict, protocols: Protocols):
-        matched: bool = self._match(pkt_out, self.meta, protocols)
+        matched: bool = self._match(pkt_out, {}, protocols)
         if (matched == True):
             self.all.append(pkt_out)
         return matched
 
     # actual filter into complete/incomplete buckets
-    def completion(self, protocols):
-        _complete, _incomplete = self._completion(self.all, protocols, self.meta)
+    def completion(self, protocols, external: dict = {}):
+        _complete, _incomplete = self._completion(self.all, protocols, external)
         self.complete: list[dict] = _complete
         self.incomplete: list[dict] = _incomplete
