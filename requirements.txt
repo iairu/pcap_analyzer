@@ -25,6 +25,8 @@ Pygments==2.13.0
 pyparsing==3.0.9
 python-dateutil==2.8.2
 PyX==0.15
+ruamel.yaml==0.17.21
+ruamel.yaml.clib==0.2.6
 scapy==2.4.5
 six==1.16.0
 stack-data==0.5.1
