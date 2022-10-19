@@ -84,7 +84,7 @@ def main():
         if (filt == None):
             pkts_out.append(pkt_out)
         else:
-            filt.matchAdd(pkt_out, pkt_bytes)
+            filt.matchAdd(pkt_out, protocols)
 
     # Header values for output and list of packet outputs
     output: dict = {}
@@ -96,7 +96,7 @@ def main():
     else:
         # Supported filter requested by user
         output["filter_name"] = filt.name
-        filt.completion()
+        filt.completion(protocols)
         output["complete_comms"] = filt.complete # todo: in Filter redefine complete as dict {number_comm, src_com, dst_comm, packets = part of Filter.complete}
         output["partial_comms"] = filt.incomplete # todo: /\, also if empty then don't assign
         

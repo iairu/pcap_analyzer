@@ -24,6 +24,7 @@ class Filters:
 """
 
 from typing import Callable
+from _reader import Protocols
 
 class Filter(object):
     def __init__(self, name: str, matcherFunc: Callable, completionFunc: Callable):
@@ -43,14 +44,14 @@ class Filter(object):
     # match if the given packet belongs to the protocol named in this filter, then
     # extract only relevant packet information for further filtering (e.g. communication buckets), then
     # add to self.all (e.g. to be ready for completion())
-    def matchAdd(self, pkt_out: dict, pkt_bytes: bytes):
-        matched: bool = self._match(pkt_out, pkt_bytes, self.meta)
+    def matchAdd(self, pkt_out: dict, protocols: Protocols):
+        matched: bool = self._match(pkt_out, self.meta, protocols)
         if (matched == True):
             self.all.append(pkt_out)
         return matched
 
     # actual filter into complete/incomplete buckets
-    def completion(self):
-        _complete, _incomplete = self._completion(self.all, self.meta)
+    def completion(self, protocols):
+        _complete, _incomplete = self._completion(self.all, protocols, self.meta)
         self.complete: list[dict] = _complete
         self.incomplete: list[dict] = _incomplete
