@@ -54,6 +54,7 @@ class Protocols:
         UDP = "udp_ports.txt"
         PID = "snap_pids.txt"
         ARPOC = "arp_opcodes.txt"
+        ICMP = "icmp_types.txt"
 
     # ------------------------------------------
 
@@ -66,6 +67,7 @@ class Protocols:
             self.udp = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.UDP, True)
             self.pid = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.PID)
             self.arp_opcode = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.ARPOC, True)
+            self.icmp_type = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.ICMP, True)
         except FileNotFoundError:
             close(Code.PROTOCOL_FILE_NOT_FOUND)
         return
@@ -90,3 +92,6 @@ class Protocols:
 
     def str_arp_opcode(self, code: int) -> str:
         return self.arp_opcode.get(code, "Unknown")
+
+    def str_icmp_type(self, code: int) -> str:
+        return self.icmp_type.get(code, "Unknown")

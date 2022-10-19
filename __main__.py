@@ -7,6 +7,7 @@ from _analyze import Analyze
 from _analyze_ip import AnalyzeIP
 from _analyze_t import AnalyzeTransport
 from _analyze_arp import AnalyzeARP
+from _analyze_icmp import AnalyzeICMP
 from _reader import Protocols
 from _filters import Filters
 import _byte as byte
@@ -39,6 +40,9 @@ def main():
     # List of all packet outputs
     pkts_out: list[dict] = []
 
+    # List of remaining unmatched fragments for ICMP analysis
+    unmatched_icmp_fragments: list[bytes] = []
+
     # Process individual packet bytes into packet outputs
     for i in range(count):
         # Get the raw bytes for this packet
@@ -67,6 +71,11 @@ def main():
         if (anal_ip == None and anal.has_eth_type and byte.btoi(anal.eth_type) == 0x806): # only if eth_type is ARP
             anal_arp = AnalyzeARP(anal.data, protocols)
             anal_arp.output(pkt_out)
+
+        # ICMP analysis
+        if (anal_ip != None and byte.btoi(anal_ip.protocol) == 0x01): # only if IPv4 protocol is ICMP
+            anal_icmp = AnalyzeICMP(anal_ip, unmatched_icmp_fragments, protocols)
+            anal_icmp.output(pkt_out)
 
         # Add hexdump to the end of packet output (processed for correct YAML output)
         pkt_out["hexa_frame"] = LiteralScalarString(byte.outputHexDump(pkt_bytes))
