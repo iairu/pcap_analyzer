@@ -1,7 +1,7 @@
 """
-IPv4 Analysis.
+ARP Analysis.
 """
-from _byte import printHexDump, btoi, btoIPv4
+from _byte import btoi, btoIPv4
 from _reader import Protocols
 
 class AnalyzeARP:

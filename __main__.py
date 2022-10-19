@@ -50,23 +50,23 @@ def main():
 
         # Do the analysis over raw bytes
         anal = Analyze(pkt_bytes, protocols)
-        pkt_out = anal.output(pkt_out) # append to existing output
+        anal.output(pkt_out) # append to existing output
 
         # Continue with IPv4 analysis
         anal_ip = None
         if (anal.has_eth_type and byte.btoi(anal.eth_type) == 0x800): # only if eth_type is IPv4
             anal_ip = AnalyzeIP(anal.data, protocols) # do the analysis
-            pkt_out = anal_ip.output(pkt_out) # append to existing output
+            anal_ip.output(pkt_out) # append to existing output
 
         # Then Transport layer analysis
         if (anal_ip != None):
             anal_t = AnalyzeTransport(anal_ip.data, anal_ip.protocol_str, protocols)
-            pkt_out = anal_t.output(pkt_out) # append to existing output
+            anal_t.output(pkt_out) # append to existing output
 
         # ARP analysis
         if (anal_ip == None and anal.has_eth_type and byte.btoi(anal.eth_type) == 0x806): # only if eth_type is ARP
             anal_arp = AnalyzeARP(anal.data, protocols)
-            pkt_out = anal_arp.output(pkt_out)
+            anal_arp.output(pkt_out)
 
         # Add hexdump to the end of packet output (processed for correct YAML output)
         pkt_out["hexa_frame"] = LiteralScalarString(byte.outputHexDump(pkt_bytes))
