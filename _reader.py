@@ -26,7 +26,7 @@ def __protocolFileToDict__(filepath: str, int_instead_of_hex: bool = False) -> d
                     else:
                         code += c
                 # Finished parsing, check validity
-                if (code[0] != "0" and code[1] != "x"):
+                if (len(code) > 2 and code[0] != "0" and code[1] != "x"):
                     if (not int_instead_of_hex):
                         close(Code.PROTOCOL_DEFINITION_WRONG)
                     else:
@@ -53,6 +53,7 @@ class Protocols:
         TCP = "tcp_ports.txt"
         UDP = "udp_ports.txt"
         PID = "snap_pids.txt"
+        ARPOC = "arp_opcodes.txt"
 
     # ------------------------------------------
 
@@ -64,6 +65,7 @@ class Protocols:
             self.tcp = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.TCP, True)
             self.udp = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.UDP, True)
             self.pid = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.PID)
+            self.arp_opcode = __protocolFileToDict__("./protocols/" + self.ProtocolFileMap.ARPOC, True)
         except FileNotFoundError:
             close(Code.PROTOCOL_FILE_NOT_FOUND)
         return
@@ -85,3 +87,6 @@ class Protocols:
 
     def str_pid(self, code: int) -> str:
         return self.pid.get(code, "Unknown")
+
+    def str_arp_opcode(self, code: int) -> str:
+        return self.arp_opcode.get(code, "Unknown")

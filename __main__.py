@@ -6,6 +6,7 @@ from _args import Args
 from _analyze import Analyze
 from _analyze_ip import AnalyzeIP
 from _analyze_t import AnalyzeTransport
+from _analyze_arp import AnalyzeARP
 from _reader import Protocols
 from _filters import Filters
 import _byte as byte
@@ -53,7 +54,7 @@ def main():
 
         # Continue with IPv4 analysis
         anal_ip = None
-        if (anal.has_eth_type and byte.btoi(anal.eth_type) == 0x800):
+        if (anal.has_eth_type and byte.btoi(anal.eth_type) == 0x800): # only if eth_type is IPv4
             anal_ip = AnalyzeIP(anal.data, protocols) # do the analysis
             pkt_out = anal_ip.output(pkt_out) # append to existing output
 
@@ -61,6 +62,11 @@ def main():
         if (anal_ip != None):
             anal_t = AnalyzeTransport(anal_ip.data, anal_ip.protocol_str, protocols)
             pkt_out = anal_t.output(pkt_out) # append to existing output
+
+        # ARP analysis
+        if (anal_ip == None and anal.has_eth_type and byte.btoi(anal.eth_type) == 0x806): # only if eth_type is ARP
+            anal_arp = AnalyzeARP(anal.data, protocols)
+            pkt_out = anal_arp.output(pkt_out)
 
         # Add hexdump to the end of packet output (processed for correct YAML output)
         pkt_out["hexa_frame"] = LiteralScalarString(byte.outputHexDump(pkt_bytes))
