@@ -43,6 +43,9 @@ def main():
     # List of remaining unmatched fragments for ICMP analysis
     unmatched_icmp_fragments: list[bytes] = []
 
+    # Save IPv4 senders and number of packets they sent
+    senders = {}
+
     # Process individual packet bytes into packet outputs
     for i in range(count):
         # Get the raw bytes for this packet
@@ -77,6 +80,11 @@ def main():
             anal_icmp = AnalyzeICMP(anal_ip, unmatched_icmp_fragments, protocols)
             anal_icmp.output(pkt_out)
 
+        # Save IPv4 senders and number of packets they sent
+        if (anal_ip != None):
+            src_ip = byte.btoIPv4(anal_ip.ip_src)
+            senders[src_ip] = 1 if not senders.get(src_ip) else senders[src_ip] + 1
+
         # Add hexdump to the end of packet output (processed for correct YAML output)
         pkt_out["hexa_frame"] = LiteralScalarString(byte.outputHexDump(pkt_bytes))
 
@@ -93,6 +101,25 @@ def main():
     if (filt == None):
         # No filter requested by user
         output["packets"] = pkts_out
+
+        # Calculate IPv4 stats
+        out_senders = []
+        top_sender_packet_count = 0
+        top_senders = []
+        for sip, scount in senders.items():
+            out_senders.append({
+                "node": sip,
+                "number_of_sent_packets": scount
+            })
+            if (scount > top_sender_packet_count):
+                top_senders = [sip]
+                top_sender_packet_count = scount
+            elif (scount == top_sender_packet_count):
+                top_senders.append(sip)
+
+        output["ipv4_senders"] = out_senders
+        output["max_send_packets_by"] = top_senders
+
     else:
         # Supported filter requested by user
         output["filter_name"] = filt.name
