@@ -165,8 +165,10 @@ def main():
         # Supported filter requested by user
         output["filter_name"] = filt.name
         filt.completion(protocols, {"tftp_active": tftp_active})
-        output["complete_comms"] = filt.complete # todo: in Filter redefine complete as dict {number_comm, src_com, dst_comm, packets = part of Filter.complete}
-        output["partial_comms"] = filt.incomplete # todo: /\, also if empty then don't assign
+        if (len(filt.complete)):
+            output["complete_comms"] = filt.complete
+        if (len(filt.incomplete)):
+            output["partial_comms"] = filt.incomplete
         
 
     # Save the dict as YAML
