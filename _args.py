@@ -20,6 +20,7 @@ class Args:
         argparser.add_argument("-o", "--output", type=str, help="Path to output YAML file - if omitted 'out.yaml' will be used")
         argparser.add_argument("--print", action="store_true", help="Print YAML output to STDOUT instead of saving to file")
         argparser.add_argument("-p", "--protocol", type=str, help="Filter by a supported protocol")
+        argparser.add_argument("--igmp_bonus", action="store_true", help="Bonus: IGMP packets only + their count")
         # argparser.add_argument("--no-leaderboard", action="store_true", help="Won't show or calculate top sender + leaderboard")
 
         # Parsing
@@ -41,6 +42,8 @@ class Args:
 
         _output = str("out.yaml" if (arguments.output == None) else arguments.output)
 
+        _igmp_bonus = False if (arguments.igmp_bonus == None) else arguments.igmp_bonus
+
         # Returning all parsed arguments
         self.path = _path
         self.first = _first
@@ -48,4 +51,5 @@ class Args:
         self.print = _print
         self.protocol = _protocol
         self.output = _output
+        self.igmp_bonus = _igmp_bonus
         # self.no_leaderboard = bool(arguments.no_leaderboard)

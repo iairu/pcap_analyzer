@@ -11,6 +11,7 @@ from _analyze_icmp import AnalyzeICMP
 from _analyze_tftp import AnalyzeTFTP
 from _reader import Protocols
 from _filters import Filters
+from _byte import btoi
 import _byte as byte
 import scapy.all as scapy
 
@@ -34,6 +35,11 @@ def main():
         if (filt == None):
             # Filter was requested by user but not supported
             close(Code.PROTOCOL_NOT_SUPPORTED)
+
+    igmp_bonus_count = 0
+    if (args.igmp_bonus):
+        filters = Filters()
+        filt = filters.grab("IGMP_BONUS")
 
     # YAML output to file
     yaml = ruamel.yaml.YAML()
@@ -132,8 +138,12 @@ def main():
         if (filt == None):
             pkts_out.append(pkt_out)
         else:
-            if (filt.name != "TFTP"):
+            if (filt.name != "TFTP" and filt.name != "IGMP_BONUS"):
                 filt.matchAdd(pkt_out, protocols)
+            if (filt.name == "IGMP_BONUS" and anal_ip != None and btoi(anal_ip.protocol) == 0x02):
+                pkts_out.append(pkt_out)
+                igmp_bonus_count += 1
+
 
     # Header values for output and list of packet outputs
     output: dict = {}
@@ -160,6 +170,11 @@ def main():
 
         output["ipv4_senders"] = out_senders
         output["max_send_packets_by"] = top_senders
+
+    elif (filt.name == "IGMP_BONUS"):
+        # IGMP Bonus filter requested by user
+        output["packets"] = pkts_out
+        output["number_frames"] = igmp_bonus_count
 
     else:
         # Supported filter requested by user
