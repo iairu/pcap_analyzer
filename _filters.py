@@ -4,6 +4,7 @@ Filter implementations for individual supported protocols over abstract interfac
 
 from _filter import Filter
 from _reader import Protocols
+from _byte import btoIPv4
 
 def matchARP(pkt_out: dict, meta: dict, protocols: Protocols):
     return False if (pkt_out.get("ether_type") != protocols.str_eth_type(0x0806)) else True
@@ -162,10 +163,10 @@ def completionTFTP(all: list[dict], protocols: Protocols, meta: dict):
     # assign incomplete and complete communications
     for m in matcher:
         if (m[6] == True and m[7] == True):
-            complete.append({"number_comm": complete_comm_num, "src_comm": m[0], "dst_comm": m[1], "packets": m[4]})
+            complete.append({"number_comm": complete_comm_num, "src_comm": btoIPv4(m[0]), "dst_comm": btoIPv4(m[1]), "packets": m[4]})
             complete_comm_num += 1
         else:
-            incomplete.append({"number_comm": incomplete_comm_num, "src_comm": m[0], "dst_comm": m[1], "packets": m[4]})
+            incomplete.append({"number_comm": incomplete_comm_num, "src_comm": btoIPv4(m[0]), "dst_comm": btoIPv4(m[1]), "packets": m[4]})
             incomplete_comm_num += 1
 
     return [complete, incomplete]
